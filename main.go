@@ -63,67 +63,16 @@ func printList(l []string) {
 
 }
 
-type Board struct {
-	Board [4][4]string
-}
-
-type Coord struct {
-	X int
-	Y int
-}
-
-func NewBoard() *Board {
-	b := new(Board)
-	b.Board = [4][4]string{
-		{"a", "b", "c", "d"},
-		{"g", "f", "g", "h"},
-		{"i", "j", "k", "l"},
-		{"m", "n", "o", "p"}}
-	return b
-}
-
-func (b *Board) PrintBoard() {
-	for _, row := range b.Board {
-		for _, char := range row {
-			fmt.Printf("%s ", char)
-		}
-		fmt.Println()
-	}
-}
-
-func (b *Board) Get(x int, y int) (string, error) {
-	if x < 0 || x > 3 || y < 0 || y > 3 {
-		return "", fmt.Errorf("Coords are out of bounds")
-	}
-	return b.Board[y][x], nil
-}
-
-func (b *Board) GetNeighbors(x int, y int) []string {
-
-	neighbors := make([]string, 0)
-	for i := x - 1; i < x+2; i++ {
-		for j := y - 1; j < y+2; j++ {
-			if i == x && j == y {
-				continue
-			}
-
-			neighbor, err := b.Get(i, j)
-			if err != nil {
-				continue
-			}
-			neighbors = append(neighbors, neighbor)
-		}
-	}
-
-	return neighbors
-}
-
 func main() {
-	b := NewBoard()
+	b, err := NewBoard()
+	if err != nil {
+		panic(err.Error())
+	}
 	b.PrintBoard()
 
-	fmt.Println(b.GetNeighbors(0, 0))
-	fmt.Println(b.GetNeighbors(1, 1))
+    for _, neighbor := range b.GetNeighbors(Coord{0, 1}) {
+        fmt.Println(neighbor)
+    }
 
 	// words, _ := readWordList("wordlist.txt")
 
