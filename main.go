@@ -26,24 +26,12 @@ func readWordList(path string) ([]string, error) {
 			fmt.Printf("error reading file %s", err)
 			return nil, err
 		}
-		if len(line) < 3 || len(line) > 10 {
+		if len(line) < 3 {
 			continue
 		}
 		words = append(words, strings.Split(line, "\n")[0])
 	}
 	return words, nil
-}
-
-func getMatches(prefix string, words []string) []string {
-	matchingWords := make([]string, 0)
-
-	for _, word := range words {
-		if strings.HasPrefix(word, prefix) {
-			matchingWords = append(matchingWords, word)
-		}
-	}
-
-	return matchingWords
 }
 
 func getInput(reader *bufio.Reader) (string, error) {
@@ -68,23 +56,23 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	b.PrintBoard()
 
-    for _, neighbor := range b.GetNeighbors(Coord{0, 1}) {
-        fmt.Println(neighbor)
-    }
+	words, _ := readWordList("wordlist.txt")
 
-	// words, _ := readWordList("wordlist.txt")
+	for x := 0; x < 4; x++ {
+		for y := 0; y < 4; y++ {
+			startingCoord, err := b.Get(x, y)
+			if err != nil {
+				panic(err.Error())
+			}
+			seenCoords := make([]Square, 0)
+			results, err := b.Search(startingCoord, seenCoords, words)
+			// TODO: dedupe
+			if err != nil {
+				panic(err.Error())
+			}
+			printList(results)
 
-	// reader := bufio.NewReader(os.Stdin)
-	// for {
-	// 	input, err := getInput(reader)
-	// 	if err != nil {
-	// 		fmt.Println(err.Error())
-	// 		os.Exit(1)
-	// 	}
-
-	// 	printList(getMatches(input, words))
-	// }
-
+		}
+	}
 }
