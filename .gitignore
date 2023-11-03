@@ -22,3 +22,4 @@ go.work
 
 # Project specific
 /wordlist.txt
+/input_board.txt
