@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/ajc133/boggle"
 	"io"
 	"os"
 	"strings"
@@ -52,7 +53,7 @@ func printList(l []string) {
 }
 
 func main() {
-	b, err := NewBoard()
+	b, err := boggle.NewBoard()
 	if err != nil {
 		panic(err.Error())
 	}
@@ -65,7 +66,7 @@ func main() {
 			if err != nil {
 				panic(err.Error())
 			}
-			seenCoords := make([]Square, 0)
+			seenCoords := make([]boggle.Square, 0)
 			results, err := b.Search(startingCoord, seenCoords, words)
 			// TODO: dedupe
 			if err != nil {
