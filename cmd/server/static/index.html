@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Boggle Solver</title>
+	<script src="/htmx.min.js"></script>
+</head>
+
+<body>
+	<form id="input-form" hx-get="/solve" hx-target="#solve-results">
+		<table>
+			<tr>
+				<td><input type="text" name="input0"></td>
+				<td><input type="text" name="input1"></td>
+				<td><input type="text" name="input2"></td>
+				<td><input type="text" name="input3"></td>
+			</tr>
+			<tr>
+				<td><input type="text" name="input4"></td>
+				<td><input type="text" name="input5"></td>
+				<td><input type="text" name="input6"></td>
+				<td><input type="text" name="input7"></td>
+			</tr>
+			<tr>
+				<td><input type="text" name="input8"></td>
+				<td><input type="text" name="input9"></td>
+				<td><input type="text" name="input10"></td>
+				<td><input type="text" name="input11"></td>
+			</tr>
+			<tr>
+				<td><input type="text" name="input12"></td>
+				<td><input type="text" name="input13"></td>
+				<td><input type="text" name="input14"></td>
+				<td><input type="text" name="input15"></td>
+			</tr>
+		</table>
+		<input type="submit" value="Submit">
+	</form>
+	<div id="solve-results"></div>
+</body>
+
+</html>

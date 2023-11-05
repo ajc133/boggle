@@ -35,14 +35,27 @@ func readWordList(path string) ([]string, error) {
 	return words, nil
 }
 
-func getInput(reader *bufio.Reader) (string, error) {
-	fmt.Print("\n\ninput text: ")
-	line, err := reader.ReadString('\n')
-	if err != nil {
-		return "", err
+func getInput() (string, error) {
+	concatenated := ""
+
+	reader := bufio.NewReader(os.Stdin)
+
+	// Read at most 4 lines of 6 characters each (including newline).
+	for i := 0; i < 4; i++ {
+		fmt.Printf("Enter line %d (up to 5 characters): ", i)
+		line, _ := reader.ReadString('\n')
+		line = strings.Split(line, "\n")[0]
+
+		// If the line length is less than 5 characters, break the loop.
+		if len(line) < 4 {
+			return "", fmt.Errorf("Too few characters")
+		} else if len(line) > 4 {
+			return "", fmt.Errorf("Too many characters")
+		}
+		concatenated += line
 	}
 
-	return strings.Split(line, "\n")[0], nil
+	return concatenated, nil
 }
 
 func printList(l []string) {
@@ -53,7 +66,12 @@ func printList(l []string) {
 }
 
 func main() {
-	b, err := boggle.NewBoard()
+	input, err := getInput()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(input)
+	b, err := boggle.NewBoard(input)
 	if err != nil {
 		panic(err.Error())
 	}

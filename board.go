@@ -1,9 +1,7 @@
 package boggle
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strings"
 )
 
@@ -47,25 +45,13 @@ func ContainsSquare(s []Square, e Square) bool {
 	return false
 }
 
-// TOOD: lower-case everything
-func NewBoard() (*Board, error) {
+func NewBoard(input string) (*Board, error) {
 	b := new(Board)
 	b.Board = make([][]Square, WIDTH)
-	reader := bufio.NewReader(os.Stdin)
 	for rowNum := 0; rowNum < WIDTH; rowNum++ {
-		line, err := reader.ReadString('\n')
-		if err != nil {
-			return nil, err
-		}
-
-		line = strings.Split(line, "\n")[0]
-		if len(line) != WIDTH {
-			return nil, fmt.Errorf("Line is not Width characters!")
-		}
-
-		rowSlice := strings.Split(line, "")
 		squares := make([]Square, 0)
-		for colNum, c := range rowSlice {
+		for colNum := 0; colNum < WIDTH; colNum++ {
+			c := string(input[rowNum*WIDTH+colNum])
 			squares = append(squares, Square{Letter: c, X: colNum, Y: rowNum})
 		}
 		b.Board[rowNum] = squares
