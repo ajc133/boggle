@@ -51,7 +51,7 @@ func NewBoard(input string) (*Board, error) {
 	for rowNum := 0; rowNum < WIDTH; rowNum++ {
 		squares := make([]Square, 0)
 		for colNum := 0; colNum < WIDTH; colNum++ {
-			c := string(input[rowNum*WIDTH+colNum])
+			c := strings.ToLower(string(input[rowNum*WIDTH+colNum]))
 			squares = append(squares, Square{Letter: c, X: colNum, Y: rowNum})
 		}
 		b.Board[rowNum] = squares
