@@ -76,22 +76,14 @@ func main() {
 		panic(err.Error())
 	}
 
-	words, _ := readWordList("wordlist.txt")
-
-	for x := 0; x < 4; x++ {
-		for y := 0; y < 4; y++ {
-			startingCoord, err := b.Get(x, y)
-			if err != nil {
-				panic(err.Error())
-			}
-			seenCoords := make([]boggle.Square, 0)
-			results, err := b.Search(startingCoord, seenCoords, words)
-			// TODO: dedupe
-			if err != nil {
-				panic(err.Error())
-			}
-			printList(results)
-
-		}
+	words, err := readWordList("wordlist.txt")
+	if err != nil {
+		panic(err.Error())
 	}
+
+	results, err := b.SearchAll(words)
+	if err != nil {
+		panic(err.Error())
+	}
+	printList(results)
 }

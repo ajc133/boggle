@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-var MINWORDLEN = 3
-var WIDTH int = 4
+const minWordLen = 3
+const defaultBoardWidth int = 4
 
 // TODO: handle 'QU'
 type Square struct {
@@ -16,7 +16,8 @@ type Square struct {
 }
 
 type Board struct {
-	Board [][]Square // FIXME: Make fixed array of Width * Width
+	board [][]Square // FIXME: Make fixed array of width * width
+	width int
 }
 
 func same(c Square, d Square) bool {
@@ -47,20 +48,30 @@ func ContainsSquare(s []Square, e Square) bool {
 
 func NewBoard(input string) (*Board, error) {
 	b := new(Board)
-	b.Board = make([][]Square, WIDTH)
-	for rowNum := 0; rowNum < WIDTH; rowNum++ {
+	b.width = defaultBoardWidth
+
+	widthSquared := b.width * b.width
+	if len(input) != widthSquared && len(input) != widthSquared+1 {
+		return &Board{}, fmt.Errorf("Wrong number of letters for a board, got %d letters, expected %d", len(input), widthSquared)
+	}
+	b.board = make([][]Square, b.width)
+	for rowNum := 0; rowNum < b.width; rowNum++ {
 		squares := make([]Square, 0)
-		for colNum := 0; colNum < WIDTH; colNum++ {
-			c := strings.ToLower(string(input[rowNum*WIDTH+colNum]))
+		for colNum := 0; colNum < b.width; colNum++ {
+			c := strings.ToLower(string(input[rowNum*b.width+colNum]))
 			squares = append(squares, Square{Letter: c, X: colNum, Y: rowNum})
 		}
-		b.Board[rowNum] = squares
+		b.board[rowNum] = squares
 	}
 	return b, nil
 }
 
+func (b *Board) Width() int {
+	return b.width
+}
+
 func (b *Board) PrintBoard() {
-	for _, row := range b.Board {
+	for _, row := range b.board {
 		for _, square := range row {
 			fmt.Printf("%s ", square.Letter)
 		}
@@ -73,7 +84,7 @@ func (b *Board) Get(x int, y int) (Square, error) {
 	if x < 0 || x > 3 || y < 0 || y > 3 {
 		return Square{}, fmt.Errorf("Coords are out of bounds")
 	}
-	return b.Board[y][x], nil
+	return b.board[y][x], nil
 }
 
 // Only shows neighbors that have not been visited yet
@@ -125,7 +136,7 @@ func GetPrefixMatches(prefix string, words []string) []string {
 }
 
 func WeFoundAWord(word string, prefixMatches []string) bool {
-	return ContainsString(prefixMatches, word) && (len(word) >= MINWORDLEN)
+	return ContainsString(prefixMatches, word) && (len(word) >= minWordLen)
 
 }
 
@@ -156,6 +167,28 @@ func (b *Board) Search(currentSquare Square, seenSquares []Square, potentialWord
 			return nil, err
 		}
 		results = append(results, subResults...)
+	}
+	return results, nil
+
+}
+
+func (b *Board) SearchAll(wordList []string) ([]string, error) {
+	var results []string
+	for x := 0; x < b.Width(); x++ {
+		for y := 0; y < b.Width(); y++ {
+			startingCoord, err := b.Get(x, y)
+			if err != nil {
+				panic(err.Error())
+			}
+			seenCoords := make([]Square, 0)
+			currentResults, err := b.Search(startingCoord, seenCoords, wordList)
+			results = append(results, currentResults...)
+			// TODO: dedupe
+			if err != nil {
+				panic(err.Error())
+			}
+
+		}
 	}
 	return results, nil
 
