@@ -43,7 +43,7 @@ func readWordList(path string) ([]string, error) {
 func main() {
 	r := gin.Default()
 
-	words, err := readWordList("wordlist.txt")
+	words, err := readWordList("./assets/static/wordlist.txt")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -51,6 +51,7 @@ func main() {
 	// TOOD: Figure out how to set index.html
 
 	r.LoadHTMLGlob("./assets/templates/*")
+	// TODO: Make these routes play nice. Maybe enumerate the static files?
 	r.Static("/static", "./assets/static")
 	r.GET("/solve", func(c *gin.Context) {
 		letters := c.Query("letters")

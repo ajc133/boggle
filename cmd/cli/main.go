@@ -76,7 +76,7 @@ func main() {
 		panic(err.Error())
 	}
 
-	words, err := readWordList("wordlist.txt")
+	words, err := readWordList("./assets/static/wordlist.txt")
 	if err != nil {
 		panic(err.Error())
 	}
